@@ -9,9 +9,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import vn.khanhduy.entities.User;
+import vn.khanhduy.services.IUserService;
+import vn.khanhduy.services.impl.UserServiceImpl;
 import vn.khanhduy.utils.Constant;
 
-@WebServlet(urlPatterns = { "/", "/home", "/login", "/logout" })
+@WebServlet(urlPatterns = { "/", "/home", "/login", "/logout", "/waiting" })
 public class HomeController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	// lay toan bo ham trong service
@@ -25,9 +28,11 @@ public class HomeController extends HttpServlet {
 		case "/login":
 			doGetLogin(req, resp);
 			break;
+		case "/waiting":
+			doGetWaiting(req, resp);
+			break;
 		case "/logout":
-			req.getSession().invalidate();
-			resp.sendRedirect(req.getContextPath() + "/login");
+			doGetLogout(req, resp);
 			break;
 		default:
 			req.getRequestDispatcher("/views/home.jsp").forward(req, resp);
@@ -42,10 +47,6 @@ public class HomeController extends HttpServlet {
 		switch (path) {
 		case "/login": {
 			doPostLogin(req, resp);
-			break;
-		}
-		case "/logout": {
-
 			break;
 		}
 		}
@@ -90,15 +91,14 @@ public class HomeController extends HttpServlet {
 		}
 
 		// xu ly bai toan
-		Users user = userService.login(username, password);
-		Users loginUser = userService.findByUsername(username);
+		User user = userService.login(username, password);
+		User loginUser = userService.findByUsername(username);
 		if (user != null) {
 			HttpSession session = req.getSession(true);
 			// sẽ lấy ra đối tượng HttpSession gắn với request hiện tại
 			// Nếu chưa có session:
 			// - true - tạo mới một session rồi trả về
 			// - false -> không tạo mới, mà trả về null
-			//SessionUtil.getInstance().setValue(req, "USERMODEL", loginUser);
 			session.setAttribute("USERMODEL", loginUser);
 			session.setAttribute("account", user);
 			
@@ -120,5 +120,38 @@ public class HomeController extends HttpServlet {
 		Cookie cookie = new Cookie(Constant.COOKIE_REMEMBER, username);
 		cookie.setMaxAge(30 * 60);
 		response.addCookie(cookie);
+	}
+	
+	protected void doGetLogout(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		session.removeAttribute("account");// or session.invalidate();
+		
+		Cookie[] cookies = req.getCookies();
+		for(Cookie cookie: cookies) {
+			if(Constant.COOKIE_REMEMBER.equals(cookie.getName())) {
+				cookie.setMaxAge(0); // remove cookie
+				resp.addCookie(cookie); //add again
+				break;
+			}
+		}
+		resp.sendRedirect("./login");
+	}
+	
+	protected void doGetWaiting(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		HttpSession session = req.getSession();
+		if (session != null && session.getAttribute("account") != null) {//co session
+			//lay du lieu tu session luon, ko can db
+			User user = (User) session.getAttribute("account");
+			req.setAttribute("username", user.getUserName());
+			if (user.getRole().getRoleId() == 1) {
+				resp.sendRedirect(req.getContextPath() + "/user/category/home");
+			} else if (user.getRole().getRoleId() == 2) {
+				resp.sendRedirect(req.getContextPath() + "/manager/category/home");
+			} else {
+				resp.sendRedirect(req.getContextPath() + "/admin/category/home");
+			}
+		} else {
+			resp.sendRedirect(req.getContextPath() + "/login");
+		}
 	}
 }

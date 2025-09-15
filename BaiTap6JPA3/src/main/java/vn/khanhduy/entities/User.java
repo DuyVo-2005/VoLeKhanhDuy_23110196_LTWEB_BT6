@@ -4,14 +4,18 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -32,16 +36,16 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int userId;
 	
-	//@Column(name = "userName", columnDefinition = "varchar(200)")
+	@Column(columnDefinition = "varchar(200)", nullable = false)
 	String userName;
 	
-	@Column(columnDefinition = "varchar(200)")
+	@Column(columnDefinition = "varchar(200)", nullable = false)
 	String password;
 	
-	@Column(columnDefinition = "nvarchar(200)")
+	@Column(columnDefinition = "nvarchar(200)", nullable = false)
 	String fullname;
 	
-	@Column(columnDefinition = "varchar(200)")
+	@Column(columnDefinition = "varchar(200)", nullable = false)
 	String email;
 	
 	@Column(columnDefinition = "nvarchar(20)")
@@ -55,4 +59,10 @@ public class User implements Serializable {
 	
 	@OneToMany(mappedBy = "user")
 	List<Category> categories = new ArrayList<>();
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "roleId", referencedColumnName = "roleId")
+	@JsonManagedReference //thanh phan chinh moi quan he
+	Role role;
+	
 }

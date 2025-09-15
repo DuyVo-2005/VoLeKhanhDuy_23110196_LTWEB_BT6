@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import jakarta.inject.Inject;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -27,17 +26,11 @@ maxRequestSize = 1024 * 1024 * 50)
 public class CategoryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	@Inject
-	private CategoryDaoImpl categoryDaoImpl;
+	CategoryDaoImpl categoryDaoImpl = new CategoryDaoImpl();
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		/*
-		 * http://localhost:8080/MyWebApp/admin/add req.getContextPath() -> /MyWebApp
-		 * 
-		 * req.getServletPath() -> /admin/add
-		 */
-		String path = req.getServletPath();// hoặc req.getRequestURI()
+		String path = req.getServletPath();
 		if (path.startsWith("/admin/category/add")) {
 			doGetAdd(req, resp);
 		} else if (path.startsWith("/admin/category/edit")) {
@@ -130,8 +123,6 @@ public class CategoryController extends HttpServlet {
 		String id = req.getParameter("id");
 		HttpSession session = req.getSession();
 		User currentUser = (User) session.getAttribute("USERMODEL");// user đang login
-		// Users currentUser = (Users) SessionUtil.getInstance().getValue(req,
-		// "USERMODEL");
 
 		Category category = categoryDaoImpl.findById(Integer.parseInt(id));
 
