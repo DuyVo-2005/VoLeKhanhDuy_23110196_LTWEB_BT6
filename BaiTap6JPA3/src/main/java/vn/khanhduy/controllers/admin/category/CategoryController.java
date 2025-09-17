@@ -19,10 +19,11 @@ import vn.khanhduy.entities.User;
 import vn.khanhduy.utils.Constant;
 import vn.khanhduy.dao.impl.CategoryDaoImpl;;
 
-@WebServlet(urlPatterns = { "/admin/category/home", "/admin/category/add", "/admin/category/edit", "/admin/category/delete" })
+@WebServlet(urlPatterns = { "/admin/category/home", "/admin/category/add", "/admin/category/edit",
+		"/admin/category/delete" })
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
-maxFileSize = 1024 * 1024 * 10, // 10MB
-maxRequestSize = 1024 * 1024 * 50)
+		maxFileSize = 1024 * 1024 * 10, // 10MB
+		maxRequestSize = 1024 * 1024 * 50)
 public class CategoryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -119,21 +120,11 @@ public class CategoryController extends HttpServlet {
 	}
 
 	protected void doGetEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
 		String id = req.getParameter("id");
-		HttpSession session = req.getSession();
-		User currentUser = (User) session.getAttribute("USERMODEL");// user đang login
-
 		Category category = categoryDaoImpl.findById(Integer.parseInt(id));
-
-		if (category != null && category.getUser().getUserId() == currentUser.getUserId()) {
-			req.setAttribute("category", category);
-			RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/edit-category.jsp");
-			dispatcher.forward(req, resp);
-		} else {
-			// Không có quyền chỉnh sửa
-			resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Bạn không có quyền chỉnh sửa category này!");
-		}
+		req.setAttribute("category", category);
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/edit-category.jsp");
+		dispatcher.forward(req, resp);
 	}
 
 	protected void doPostEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

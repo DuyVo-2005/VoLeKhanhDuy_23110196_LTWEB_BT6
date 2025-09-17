@@ -31,7 +31,7 @@ public class Video implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int videoId;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne//(fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId", nullable = false)
 	User user;
 	

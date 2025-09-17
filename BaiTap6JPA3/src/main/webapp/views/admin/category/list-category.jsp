@@ -1,13 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
+<div class="main">
 	<table border="1" cellpadding="5" cellspacing="0">
 		<thead>
 			<tr>
@@ -27,8 +21,10 @@
 					</c:url>
 					<td><img height="150" width="200" src="${imgUrl}" /></td>
 					<td>${cate.categoryName}</td>
-					<td><a href="<c:url value='/admin/category/edit?id=${cate.categoryId}'/>">Sửa</a>
-						| <a href="<c:url value='/admin/category/delete?id=${cate.categoryId}'/>">Xóa</a></td>
+					<td><a
+						href="<c:url value='/admin/category/edit?id=${cate.categoryId}'/>">Sửa</a>
+						| <a
+						href="<c:url value='/admin/category/delete?id=${cate.categoryId}'/>">Xóa</a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
@@ -36,5 +32,10 @@
 	<button type="button"
 		onclick="location.href='<c:url value='/admin/category/add' />'"
 		class="btn btn-primary">Thêm</button>
-</body>
-</html>
+	<button type="button"
+		onclick="location.href='<c:url value='/admin/video/home' />'"
+		class="btn btn-primary">Tab Video</button>
+	<button type="button"
+		onclick="location.href='<c:url value='/admin/user/home' />'"
+		class="btn btn-primary">Tab User</button>
+</div>

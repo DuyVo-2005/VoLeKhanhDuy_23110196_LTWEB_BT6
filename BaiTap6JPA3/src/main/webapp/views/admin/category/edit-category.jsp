@@ -8,39 +8,19 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<c:url value="/admin/user/edit" var="edit"></c:url>
+	<c:url value="/admin/category/edit" var="edit"></c:url>
 	<form role="form" action="${edit}" method="post"
 		enctype="multipart/form-data">
-		<input name="userid" value="${user.userId }" hidden="">
+		<input name="id" value="${category.categoryId }" hidden="">
 		<div class="form-group">
-			<label>Username:</label> <input type="text" class="form-control"
-				value="${user.userName }" name="username" required"/>
+			<label>Tên danh mục:</label> <input type="text" class="form-control"
+				value="${category.categoryName }" name="name" />
 		</div>
 		<div class="form-group">
-			<label>Role Name:</label> <input type="text" class="form-control"
-				value="${user.role.roleName }" name="roleName" required/>
-		</div>
-		<div class="form-group">
-			<label>Email:</label> <input type="text" class="form-control"
-				value="${user.email }" name="email" required/>
-		</div>
-		<div class="form-group">
-			<label>Fullname:</label> <input type="text" class="form-control"
-				value="${user.fullname }" name="fullname" />
-		</div>
-		<div class="form-group">
-			<c:url value="/image?fname=${user.imageLink}" var="imgUrl"></c:url>
+			<c:url value="/image?fname=${category.images }" var="imgUrl"></c:url>
 			<img class="img-responsive" width="100px" src="${imgUrl}" alt="">
-			<label>Ảnh đại diện</label> <input type="file" name="image"
+			<label>Ảnh danh mục:</label> <input type="file" name="image"
 				value="${category.images }" />
-		</div>
-		<div class="form-group">
-			<label>Password:</label> <input type="text" class="form-control"
-				value="${user.password }" name="paswword" required/>
-		</div>
-		<div class="form-group">
-			<label>Phone:</label> <input type="text" class="form-control"
-				value="${user.phone }" name="phone" />
 		</div>
 		<button type="submit" class="btn btn-default">Edit</button>
 		<button type="reset" class="btn btn-primary">Reset</button>

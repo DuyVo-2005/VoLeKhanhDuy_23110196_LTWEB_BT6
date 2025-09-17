@@ -67,8 +67,11 @@ public abstract class AbstractDao<T> {
 
 	public T findById(Object id) {
 		EntityManager enma = JPAConfigs.CreateEntityManager();
-		T entity = enma.find(entityClass, id);
-		return entity;
+		try {
+	        return enma.find(entityClass, id);
+	    } finally {
+	        enma.close();
+	    }
 	}
 	
 	public List<T> findAll() {
@@ -99,7 +102,7 @@ public abstract class AbstractDao<T> {
 			Query q = enma.createQuery(cq);
 			return (Long) q.getSingleResult();
 		} finally {
-			// TODO: handle finally clause
+			enma.close();
 		}
 	}
 	
