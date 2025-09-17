@@ -13,13 +13,22 @@
 		enctype="multipart/form-data">
 		<input name="id" value="${category.categoryId }" hidden="">
 		<div class="form-group">
-			<label>Tên danh mục:</label> <input type="text" class="form-control"
+			<label>Category Name:</label> <input type="text" class="form-control"
 				value="${category.categoryName }" name="name" />
+		</div>
+		<div class="form-group">
+			<label>User Name:</label>
+			<select class="form-control" name="userId" required>
+				<c:forEach var="u" items="${userList}">
+					<option value="${u.userId }" <c:if test="${category.user.userName == u.userName }">selected</c:if>>
+					${u.userName}</option>
+				</c:forEach>
+			</select>
 		</div>
 		<div class="form-group">
 			<c:url value="/image?fname=${category.images }" var="imgUrl"></c:url>
 			<img class="img-responsive" width="100px" src="${imgUrl}" alt="">
-			<label>Ảnh danh mục:</label> <input type="file" name="image"
+			<label>Image:</label> <input type="file" name="image"
 				value="${category.images }" />
 		</div>
 		<button type="submit" class="btn btn-default">Edit</button>

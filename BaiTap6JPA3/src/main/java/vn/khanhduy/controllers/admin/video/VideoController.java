@@ -12,7 +12,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import vn.khanhduy.dao.impl.UserDaoImpl;
 import vn.khanhduy.dao.impl.VideoDaoImpl;
@@ -63,7 +62,7 @@ public class VideoController extends HttpServlet {
 	protected void doGetAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UserDaoImpl userDaoImpl = new UserDaoImpl();
 	    List<User> userList = userDaoImpl.findAll();
-	    req.setAttribute("users", userList);
+	    req.setAttribute("userList", userList);
 	    
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/video/add-video.jsp");
 		dispatcher.forward(req, resp);
@@ -80,11 +79,17 @@ public class VideoController extends HttpServlet {
 			resp.setContentType("text/html");
 			resp.setCharacterEncoding("UTF-8");
 			req.setCharacterEncoding("UTF-8");
+			
+			String userIdStr = req.getParameter("userId");
+			if (userIdStr == null || userIdStr.isEmpty()) {
+			    throw new ServletException("User chưa được chọn!");
+			}
 
-			// Lấy user từ session
-			HttpSession session = req.getSession();
-			User user = (User) session.getAttribute("account");
-			video.setUser(user);// gán user cho video
+			int userId = Integer.parseInt(userIdStr);
+			UserDaoImpl userDaoImpl = new UserDaoImpl();
+			User user = userDaoImpl.findById(userId);
+			userDaoImpl.update(user);//tranh loi detached
+			video.setUser(user);
 
 			String fileName = "";
 			String newFileName = "";
@@ -121,7 +126,7 @@ public class VideoController extends HttpServlet {
 	}
 
 	protected void doGetEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		String videoId = req.getParameter("videoId");
+		String videoId = req.getParameter("id");
 	    if (videoId == null) {
 	        resp.sendRedirect(req.getContextPath() + "/admin/video/home");
 	        return;
@@ -135,8 +140,8 @@ public class VideoController extends HttpServlet {
 	    }
 		
 		UserDaoImpl userDaoImpl = new UserDaoImpl();
-		List<User> users = userDaoImpl.findAll();
-		req.setAttribute("users", users);
+		List<User> userList = userDaoImpl.findAll();
+		req.setAttribute("userList", userList);
 		req.setAttribute("video", video);
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/video/edit-video.jsp");
@@ -150,14 +155,20 @@ public class VideoController extends HttpServlet {
 			req.setCharacterEncoding("UTF-8");
 
 			// Lấy id từ form
-			int id = Integer.parseInt(req.getParameter("videoId"));
-
+			int id = Integer.parseInt(req.getParameter("id"));
+			
 			// Lấy video cũ từ DB
 			Video video = videoDaoImpl.findById(id);
 			if (video == null) {
 				resp.sendRedirect(req.getContextPath() + "/admin/video/home");
 				return;
 			}
+
+			// Cập nhật giá trị mới
+			UserDaoImpl userDaoImpl = new UserDaoImpl();
+			User user = userDaoImpl.findById(Integer.parseInt(req.getParameter("userId")));
+			userDaoImpl.update(user);//tranh loi detached
+			video.setUser(user);
 
 			// Upload file mới nếu có
 			String fileName = "";

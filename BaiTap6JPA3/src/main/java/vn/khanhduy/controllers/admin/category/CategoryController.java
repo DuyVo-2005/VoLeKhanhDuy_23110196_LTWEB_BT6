@@ -17,7 +17,8 @@ import jakarta.servlet.http.Part;
 import vn.khanhduy.entities.Category;
 import vn.khanhduy.entities.User;
 import vn.khanhduy.utils.Constant;
-import vn.khanhduy.dao.impl.CategoryDaoImpl;;
+import vn.khanhduy.dao.impl.CategoryDaoImpl;
+import vn.khanhduy.dao.impl.UserDaoImpl;;
 
 @WebServlet(urlPatterns = { "/admin/category/home", "/admin/category/add", "/admin/category/edit",
 		"/admin/category/delete" })
@@ -56,11 +57,16 @@ public class CategoryController extends HttpServlet {
 	protected void doGetList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		List<Category> cateList = categoryDaoImpl.findAll();
 		req.setAttribute("cateList", cateList);
+		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/list-category.jsp");
 		dispatcher.forward(req, resp);
 	}
 
 	protected void doGetAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		UserDaoImpl userDaoImpl = new UserDaoImpl();
+	    List<User> userList = userDaoImpl.findAll();
+	    req.setAttribute("userList", userList);
+		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/add-category.jsp");
 		dispatcher.forward(req, resp);
 	}
@@ -77,14 +83,20 @@ public class CategoryController extends HttpServlet {
 			resp.setCharacterEncoding("UTF-8");
 			req.setCharacterEncoding("UTF-8");
 
+			String userIdStr = req.getParameter("userId");
+			if (userIdStr == null || userIdStr.isEmpty()) {
+			    throw new ServletException("User chưa được chọn!");
+			}
+
+			int userId = Integer.parseInt(userIdStr);
+			UserDaoImpl userDaoImpl = new UserDaoImpl();
+			User user = userDaoImpl.findById(userId);
+			userDaoImpl.update(user);//tranh loi detached
+			category.setUser(user);
+			
 			// Lấy tên category từ form
 			category.setCategoryName(req.getParameter("name"));
 
-			// Lấy user từ session
-			HttpSession session = req.getSession();
-			User user = (User) session.getAttribute("account");
-
-			category.setUser(user); // gán user cho category
 
 			String fileName = "";
 			String newFileName = "";
@@ -123,6 +135,11 @@ public class CategoryController extends HttpServlet {
 		String id = req.getParameter("id");
 		Category category = categoryDaoImpl.findById(Integer.parseInt(id));
 		req.setAttribute("category", category);
+
+		UserDaoImpl userDaoImpl = new UserDaoImpl();
+		List<User> userList = userDaoImpl.findAll();
+		req.setAttribute("userList", userList);
+
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/edit-category.jsp");
 		dispatcher.forward(req, resp);
 	}
@@ -142,6 +159,12 @@ public class CategoryController extends HttpServlet {
 				resp.sendRedirect(req.getContextPath() + "/admin/category/home");
 				return;
 			}
+
+			// Cập nhật giá trị mới
+			UserDaoImpl userDaoImpl = new UserDaoImpl();
+			User user = userDaoImpl.findById(Integer.parseInt(req.getParameter("userId")));
+			userDaoImpl.update(user);// tranh loi detached
+			category.setUser(user);
 
 			// Cập nhật tên mới
 			category.setCategoryName(req.getParameter("name"));

@@ -6,9 +6,10 @@
 		<thead>
 			<tr>
 				<th>STT</th>
-				<th>Ảnh</th>
-				<th>Tên danh mục</th>
-				<th>Hành động</th>
+				<th>Image</th>
+				<th>Category Name</th>
+				<th>User Name</th>
+				<th>Action</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -21,6 +22,7 @@
 					</c:url>
 					<td><img height="150" width="200" src="${imgUrl}" /></td>
 					<td>${cate.categoryName}</td>
+					<td>${cate.user.userName}</td>
 					<td><a
 						href="<c:url value='/admin/category/edit?id=${cate.categoryId}'/>">Sửa</a>
 						| <a
@@ -31,7 +33,7 @@
 	</table>
 	<button type="button"
 		onclick="location.href='<c:url value='/admin/category/add' />'"
-		class="btn btn-primary">Thêm</button>
+		class="btn btn-primary">Add Category</button>
 	<button type="button"
 		onclick="location.href='<c:url value='/admin/video/home' />'"
 		class="btn btn-primary">Tab Video</button>

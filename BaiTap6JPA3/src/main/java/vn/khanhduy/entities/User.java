@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +18,9 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
@@ -55,10 +54,14 @@ public class User implements Serializable {
 	@Column(columnDefinition = "nvarchar(max)")
 	String imageLink;
 	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "user")
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	List<Video> videos = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "user")
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	List<Category> categories = new ArrayList<>();
 	
 	@ManyToOne

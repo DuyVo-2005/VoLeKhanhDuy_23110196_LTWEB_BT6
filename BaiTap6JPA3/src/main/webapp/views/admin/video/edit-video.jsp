@@ -6,20 +6,20 @@
 	<c:url value="/admin/video/edit" var="edit"></c:url>
 	<form role="form" action="${edit}" method="post"
 		enctype="multipart/form-data">
-		<input name="videoId" value="${video.videoId }" hidden="">
+		<input type="hidden" name="id" value="${video.videoId }">
 		<div class="form-group">
-			<label>Tên user:</label>
+			<label>Username:</label>
 			<select class="form-control" name="userId" required>
-				<option value="${video.user.userName}"></option>
-				<c:forEach var="u" items="${users}">
-					<option value="${u.userId }">${u.userName}</option>
+				<c:forEach var="u" items="${userList}">
+					<option value="${u.userId }" <c:if test="${video.user.userName == u.userName }">selected</c:if>>
+					${u.userName}</option>
 				</c:forEach>
 			</select>
 		</div>
 		<div class="form-group">
 			<c:url value="/image?fname=${video.videoLink}" var="imgUrl"></c:url>
 			<img class="img-responsive" width="100px" src="${imgUrl}" alt="">
-			<label>Video:</label> <input type="file" name="video"
+			<label>Video:</label> <input type="file" name="videoLink"
 				value="${video.videoLink }" />
 		</div>
 		<button type="submit" class="btn btn-default">Edit</button>

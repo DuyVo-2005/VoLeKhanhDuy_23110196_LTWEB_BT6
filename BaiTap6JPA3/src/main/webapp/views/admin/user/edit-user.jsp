@@ -8,7 +8,8 @@
 		enctype="multipart/form-data">
 		<input name="id" value="${user.userId }" hidden="">
 		<div class="form-group">
-			<label>Username:</label> <input type="text" class="form-control"
+			<label>Username:</label>
+			<input type="text" class="form-control"
 				value="${user.userName }" name="username" required/>
 		</div>
 		<div class="form-group">
@@ -33,8 +34,8 @@
 		<div class="form-group">
 			<c:url value="/image?fname=${user.imageLink}" var="imgUrl"></c:url>
 			<img class="img-responsive" width="100px" src="${imgUrl}" alt="">
-			<label>Ảnh đại diện</label> <input type="file" name="image"
-				value="${category.images }" />
+			<label>User Image</label> <input type="file" name="image"
+				value="${user.imageLink }" />
 		</div>
 		<div class="form-group">
 			<label>Password:</label> <input type="text" class="form-control"

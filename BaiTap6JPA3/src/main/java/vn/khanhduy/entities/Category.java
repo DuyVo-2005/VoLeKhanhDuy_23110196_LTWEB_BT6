@@ -35,7 +35,7 @@ public class Category implements Serializable {
 	@Column(columnDefinition = "nvarchar(max)")
 	String images;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userId", nullable = false)
 	User user;
 }

@@ -15,7 +15,9 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
@@ -36,5 +38,7 @@ public class Role implements Serializable {
 	
 	@OneToMany(mappedBy = "role")
 	@JsonManagedReference
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	List<User> users;
 }

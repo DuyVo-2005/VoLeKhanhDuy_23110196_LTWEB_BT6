@@ -36,14 +36,21 @@
 					<td><img height="150" width="200" src="${imgUrl}" /></td>
 					<td>${user.password}</td>
 					<td>${user.phone}</td>
-					<td><a href="<c:url value='/admin/user/edit?id=${user.userId}'/>">Sửa</a>
-						| <a href="<c:url value='/admin/user/delete?id=${user.userId}'/>">Xóa</a></td>
+					<td><a
+						href="<c:url value='/admin/user/edit?id=${user.userId}'/>">Edit</a>
+						| <a href="<c:url value='/admin/user/delete?id=${user.userId}'/>">Delete</a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 	<button type="button"
 		onclick="location.href='<c:url value='/admin/user/add' />'"
-		class="btn btn-primary">Thêm</button>
+		class="btn btn-primary">Add User</button>
+	<button type="button"
+		onclick="location.href='<c:url value='/admin/category/home' />'"
+		class="btn btn-primary">Tab Category</button>
+	<button type="button"
+		onclick="location.href='<c:url value='/admin/video/home' />'"
+		class="btn btn-primary">Tab Video</button>
 </body>
 </html>

@@ -18,21 +18,21 @@
 					<td>
 						<video width="640" height="360" controls>
 							<source
-								src="${pageContext.request.contextPath}/image?fname=video.mp4"
+								src="${pageContext.request.contextPath}/image?fname=${video.videoLink}"
 								type="video/mp4">
 						</video>
 					</td>
 					<td><a
-						href="<c:url value='/admin/video/edit?videoId=${video.videoId}'/>">Sửa</a>
+						href="<c:url value='/admin/video/edit?id=${video.videoId}'/>">Sửa</a>
 						| <a
-						href="<c:url value='/admin/video/delete?videoId=${video.videoId}'/>">Xóa</a></td>
+						href="<c:url value='/admin/video/delete?id=${video.videoId}'/>">Xóa</a></td>
 				</tr>
 			</c:forEach>
 		</tbody>
 	</table>
 	<button type="button"
 		onclick="location.href='<c:url value='/admin/video/add' />'"
-		class="btn btn-primary">Thêm</button>
+		class="btn btn-primary">Add Video</button>
 	<button type="button"
 		onclick="location.href='<c:url value='/admin/category/home' />'"
 		class="btn btn-primary">Tab Category</button>
