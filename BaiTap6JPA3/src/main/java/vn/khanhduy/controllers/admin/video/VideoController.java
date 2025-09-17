@@ -53,7 +53,13 @@ public class VideoController extends HttpServlet {
 	}
 
 	protected void doGetList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Video> videoList = videoDaoImpl.findAll();
+		String keyword = req.getParameter("keyword");
+		List<Video> videoList;
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			videoList = videoDaoImpl.searchByKeyword(keyword);
+		} else {
+			videoList = videoDaoImpl.findAll();// load tất cả nếu không search
+		}
 		req.setAttribute("videoList", videoList);
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/video/list-video.jsp");
 		dispatcher.forward(req, resp);
@@ -61,9 +67,9 @@ public class VideoController extends HttpServlet {
 
 	protected void doGetAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UserDaoImpl userDaoImpl = new UserDaoImpl();
-	    List<User> userList = userDaoImpl.findAll();
-	    req.setAttribute("userList", userList);
-	    
+		List<User> userList = userDaoImpl.findAll();
+		req.setAttribute("userList", userList);
+
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/video/add-video.jsp");
 		dispatcher.forward(req, resp);
 	}
@@ -79,16 +85,16 @@ public class VideoController extends HttpServlet {
 			resp.setContentType("text/html");
 			resp.setCharacterEncoding("UTF-8");
 			req.setCharacterEncoding("UTF-8");
-			
+
 			String userIdStr = req.getParameter("userId");
 			if (userIdStr == null || userIdStr.isEmpty()) {
-			    throw new ServletException("User chưa được chọn!");
+				throw new ServletException("User chưa được chọn!");
 			}
 
 			int userId = Integer.parseInt(userIdStr);
 			UserDaoImpl userDaoImpl = new UserDaoImpl();
 			User user = userDaoImpl.findById(userId);
-			userDaoImpl.update(user);//tranh loi detached
+			userDaoImpl.update(user);// tranh loi detached
 			video.setUser(user);
 
 			String fileName = "";
@@ -127,23 +133,23 @@ public class VideoController extends HttpServlet {
 
 	protected void doGetEdit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String videoId = req.getParameter("id");
-	    if (videoId == null) {
-	        resp.sendRedirect(req.getContextPath() + "/admin/video/home");
-	        return;
-	    }
+		if (videoId == null) {
+			resp.sendRedirect(req.getContextPath() + "/admin/video/home");
+			return;
+		}
 
-	    int id = Integer.parseInt(videoId);
-	    Video video = videoDaoImpl.findById(id);
-	    if (video == null) {
-	        resp.sendRedirect(req.getContextPath() + "/admin/video/home");
-	        return;
-	    }
-		
+		int id = Integer.parseInt(videoId);
+		Video video = videoDaoImpl.findById(id);
+		if (video == null) {
+			resp.sendRedirect(req.getContextPath() + "/admin/video/home");
+			return;
+		}
+
 		UserDaoImpl userDaoImpl = new UserDaoImpl();
 		List<User> userList = userDaoImpl.findAll();
 		req.setAttribute("userList", userList);
 		req.setAttribute("video", video);
-		
+
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/video/edit-video.jsp");
 		dispatcher.forward(req, resp);
 	}
@@ -156,7 +162,7 @@ public class VideoController extends HttpServlet {
 
 			// Lấy id từ form
 			int id = Integer.parseInt(req.getParameter("id"));
-			
+
 			// Lấy video cũ từ DB
 			Video video = videoDaoImpl.findById(id);
 			if (video == null) {
@@ -167,7 +173,7 @@ public class VideoController extends HttpServlet {
 			// Cập nhật giá trị mới
 			UserDaoImpl userDaoImpl = new UserDaoImpl();
 			User user = userDaoImpl.findById(Integer.parseInt(req.getParameter("userId")));
-			userDaoImpl.update(user);//tranh loi detached
+			userDaoImpl.update(user);// tranh loi detached
 			video.setUser(user);
 
 			// Upload file mới nếu có

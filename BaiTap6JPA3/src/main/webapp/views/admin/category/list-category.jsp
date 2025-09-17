@@ -2,6 +2,14 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 <div class="main">
+	<form action="${pageContext.request.contextPath }/admin/category/home"
+		method="get" class="form-inline mb-3">
+		<input type="text" name="keyword"
+			placeholder="Search user by category name" class="form-control mr-2"
+			value="${keyword}">
+		<button type="submit" class="btn btn-primary">Search</button>
+	</form>
+
 	<table border="1" cellpadding="5" cellspacing="0">
 		<thead>
 			<tr>

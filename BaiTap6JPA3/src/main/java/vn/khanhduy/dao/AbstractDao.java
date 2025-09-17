@@ -8,6 +8,7 @@ import jakarta.persistence.Query;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import vn.khanhduy.configs.JPAConfigs;
+import vn.khanhduy.entities.Video;
 
 public abstract class AbstractDao<T> {
 	private Class<T> entityClass;

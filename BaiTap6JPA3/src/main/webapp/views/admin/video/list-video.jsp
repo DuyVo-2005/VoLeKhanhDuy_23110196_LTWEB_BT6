@@ -2,6 +2,12 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 <div class="main">
+	<form action="${pageContext.request.contextPath}/admin/video/home" method="get" class="form-inline mb-3">
+		<input type="text" name="keyword" placeholder="Search video by user name"
+			class="form-control mr-2" value="${keyword}">
+		<button type="submit" class="btn btn-primary">Search</button>
+	</form>
+
 	<table border="1" cellpadding="5" cellspacing="0">
 		<thead>
 			<tr>
@@ -15,13 +21,11 @@
 				<tr>
 					<td>${STT.index + 1}</td>
 					<td>${video.user.userName}</td>
-					<td>
-						<video width="640" height="360" controls>
+					<td><video width="640" height="360" controls>
 							<source
 								src="${pageContext.request.contextPath}/image?fname=${video.videoLink}"
 								type="video/mp4">
-						</video>
-					</td>
+						</video></td>
 					<td><a
 						href="<c:url value='/admin/video/edit?id=${video.videoId}'/>">Sửa</a>
 						| <a

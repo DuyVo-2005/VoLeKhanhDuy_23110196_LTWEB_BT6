@@ -55,7 +55,14 @@ public class CategoryController extends HttpServlet {
 	}
 
 	protected void doGetList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<Category> cateList = categoryDaoImpl.findAll();
+		String keyword = req.getParameter("keyword");
+		List<Category> cateList;
+		if(keyword != null && !keyword.trim().isEmpty()) {
+			cateList = categoryDaoImpl.searchByCategoryName(keyword);
+		}
+		else {
+			cateList = categoryDaoImpl.findAll();
+		}
 		req.setAttribute("cateList", cateList);
 		
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/list-category.jsp");
@@ -64,9 +71,9 @@ public class CategoryController extends HttpServlet {
 
 	protected void doGetAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		UserDaoImpl userDaoImpl = new UserDaoImpl();
-	    List<User> userList = userDaoImpl.findAll();
-	    req.setAttribute("userList", userList);
-		
+		List<User> userList = userDaoImpl.findAll();
+		req.setAttribute("userList", userList);
+
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/category/add-category.jsp");
 		dispatcher.forward(req, resp);
 	}
@@ -85,18 +92,17 @@ public class CategoryController extends HttpServlet {
 
 			String userIdStr = req.getParameter("userId");
 			if (userIdStr == null || userIdStr.isEmpty()) {
-			    throw new ServletException("User chưa được chọn!");
+				throw new ServletException("User chưa được chọn!");
 			}
 
 			int userId = Integer.parseInt(userIdStr);
 			UserDaoImpl userDaoImpl = new UserDaoImpl();
 			User user = userDaoImpl.findById(userId);
-			userDaoImpl.update(user);//tranh loi detached
+			userDaoImpl.update(user);// tranh loi detached
 			category.setUser(user);
-			
+
 			// Lấy tên category từ form
 			category.setCategoryName(req.getParameter("name"));
-
 
 			String fileName = "";
 			String newFileName = "";

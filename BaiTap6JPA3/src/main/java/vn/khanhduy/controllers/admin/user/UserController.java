@@ -53,7 +53,14 @@ public class UserController extends HttpServlet {
 	}
 
 	protected void doGetList(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-		List<User> userList = userDaoImpl.findAll();
+		String keyword = req.getParameter("keyword");
+		List<User> userList;
+		if(keyword != null && !keyword.trim().isEmpty()) {
+			userList = userDaoImpl.searchByUsername(keyword);
+		}
+		else {
+			userList = userDaoImpl.findAll();
+		}
 		req.setAttribute("userList", userList);
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/views/admin/user/list-user.jsp");
 		dispatcher.forward(req, resp);
